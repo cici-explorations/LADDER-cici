@@ -335,6 +335,9 @@ class TrainTransformersNER:
         if best_f1_score < 0:
             self.model.save_pretrained(self.args.checkpoint_dir)
             self.transforms.tokenizer.save_pretrained(self.args.checkpoint_dir)
+            # Save the model's state dictionary
+            torch.save(self.model.state_dict(), self.args.checkpoint_dir)
+            # torch.save(self.entity_extraction.state_dict(), self.model_save_path)
 
         self.model.module.from_pretrained(self.args.checkpoint_dir)
         if data_loader['test']:
