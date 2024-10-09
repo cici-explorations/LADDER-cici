@@ -1,0 +1,8 @@
+# Ignore the logs directory
+/ner/logs/
+
+# Ignore all .DS_Store files
+.DS_Store
+
+# Ignore compiled Python files
+*.pyc
