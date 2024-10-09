@@ -292,16 +292,24 @@ class TrainTransformersNER:
         self.__setup_model_data(self.args.dataset, self.args.lower_case)
         writer = SummaryWriter(log_dir=self.args.checkpoint_dir)
 
-        data_loader = {'train': self.__setup_loader('train', self.args.batch_size, self.args.max_seq_length)}
-        if monitor_validation and 'valid' in self.dataset_split.keys():
-            data_loader['valid'] = self.__setup_loader('valid', batch_size_validation, max_seq_length_validation)
-        else:
-            data_loader['valid'] = None
+        # data_loader = {'train': self.__setup_loader('train', self.args.batch_size, self.args.max_seq_length)}
+        # if monitor_validation and 'valid' in self.dataset_split.keys():
+        #     data_loader['valid'] = self.__setup_loader('valid', batch_size_validation, max_seq_length_validation)
+        # else:
+        #     data_loader['valid'] = None
 
+        # if 'test' in self.dataset_split.keys():
+        #     data_loader['test'] = self.__setup_loader('test', batch_size_validation, max_seq_length_validation)
+        # else:
+        #     data_loader['test'] = None
+        # Only set up the test data loader
         if 'test' in self.dataset_split.keys():
-            data_loader['test'] = self.__setup_loader('test', batch_size_validation, max_seq_length_validation)
+            data_loader = {'test': self.__setup_loader('test', batch_size_validation, max_seq_length_validation)}
         else:
-            data_loader['test'] = None
+            raise ValueError("Test data split is not found in the dataset.")
+        
+        # Proceed with testing the model
+        # Example: self.test_model(data_loader['test'])
 
         # start experiment
         start_time = time()
