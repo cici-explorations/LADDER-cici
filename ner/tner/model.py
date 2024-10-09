@@ -312,40 +312,40 @@ class TrainTransformersNER:
         # Example: self.test_model(data_loader['test'])
 
         # start experiment
-        start_time = time()
-        best_f1_score = -1
-        logging.info('*** start training from step {}, epoch {} ***'.format(self.__step, self.__epoch))
-        try:
-            while True:
-                if_training_finish = self.__epoch_train(data_loader['train'], writer=writer)
-                self.release_cache()
-                if data_loader['valid']:
-                    try:
-                        metric = self.__epoch_valid(data_loader['valid'], writer=writer, prefix='valid')
-                        if metric['f1'] > best_f1_score:
-                            best_f1_score = metric['f1']
-                            self.model.module.save_pretrained(self.args.checkpoint_dir)
-                            self.transforms.tokenizer.save_pretrained(self.args.checkpoint_dir)
-                    except RuntimeError:
-                        logging.exception('*** RuntimeError: skip validation ***')
+        # start_time = time()
+        # best_f1_score = -1
+        # logging.info('*** start training from step {}, epoch {} ***'.format(self.__step, self.__epoch))
+        # try:
+        #     while True:
+        #         if_training_finish = self.__epoch_train(data_loader['train'], writer=writer)
+        #         self.release_cache()
+        #         if data_loader['valid']:
+        #             try:
+        #                 metric = self.__epoch_valid(data_loader['valid'], writer=writer, prefix='valid')
+        #                 if metric['f1'] > best_f1_score:
+        #                     best_f1_score = metric['f1']
+        #                     self.model.module.save_pretrained(self.args.checkpoint_dir)
+        #                     self.transforms.tokenizer.save_pretrained(self.args.checkpoint_dir)
+        #             except RuntimeError:
+        #                 logging.exception('*** RuntimeError: skip validation ***')
 
-                    self.release_cache()
-                if if_training_finish:
-                    break
-                self.__epoch += 1
-        except RuntimeError:
-            logging.exception('*** RuntimeError ***')
+        #             self.release_cache()
+        #         if if_training_finish:
+        #             break
+        #         self.__epoch += 1
+        # except RuntimeError:
+        #     logging.exception('*** RuntimeError ***')
 
-        except KeyboardInterrupt:
-            logging.info('*** KeyboardInterrupt ***')
+        # except KeyboardInterrupt:
+        #     logging.info('*** KeyboardInterrupt ***')
 
-        logging.info('[training completed, {} sec in total]'.format(time() - start_time))
-        if best_f1_score < 0:
-            self.model.save_pretrained(self.args.checkpoint_dir)
-            self.transforms.tokenizer.save_pretrained(self.args.checkpoint_dir)
-            # Save the model's state dictionary
-            torch.save(self.model.state_dict(), self.args.checkpoint_dir)
-            # torch.save(self.entity_extraction.state_dict(), self.model_save_path)
+        # logging.info('[training completed, {} sec in total]'.format(time() - start_time))
+        # if best_f1_score < 0:
+        #     self.model.save_pretrained(self.args.checkpoint_dir)
+        #     self.transforms.tokenizer.save_pretrained(self.args.checkpoint_dir)
+        #     # Save the model's state dictionary
+        #     torch.save(self.model.state_dict(), self.args.checkpoint_dir)
+        #     # torch.save(self.entity_extraction.state_dict(), self.model_save_path)
 
         self.model.module.from_pretrained(self.args.checkpoint_dir)
         if data_loader['test']:
