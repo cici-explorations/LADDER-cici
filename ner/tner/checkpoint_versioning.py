@@ -90,8 +90,8 @@ class Argument:
         if len(all_dir) == 0:
             return []
         for _dir in all_dir:
+            #os.path.exists('{}/parameter.json'.format(checkpoint_dir))
             if os.path.exists('{}/parameter.json'.format(checkpoint_dir))\
-                    and os.path.exists('{}/pytorch_model.bin'.format(checkpoint_dir))\
                     and os.path.exists('{}/tokenizer_config.json'.format(checkpoint_dir)):
                 pass
             else:

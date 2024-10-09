@@ -351,7 +351,7 @@ class TrainTransformersNER:
         if data_loader['test']:
             self.__epoch_valid(data_loader['test'], writer=writer, prefix='test')
 
-        writer.close()
+        # writer.close()
         logging.info('ckpt saved at {}'.format(self.args.checkpoint_dir))
         self.args.is_trained = True
         self.__train_called = True
