@@ -131,7 +131,7 @@ class TrainTransformersNER:
         """ set up data/language model """
         if self.model is not None:
             return
-        if self.args.is_trained:
+        if self.args.is_trained and 0:
             self.model = transformers.AutoModelForTokenClassification.from_pretrained(self.args.transformers_model)
             self.transforms = Transforms(self.args.transformers_model, cache_dir=self.cache_dir)
             self.label_to_id = self.model.config.label2id
