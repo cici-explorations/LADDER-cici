@@ -336,7 +336,7 @@ class TrainTransformersNER:
             self.model.save_pretrained(self.args.checkpoint_dir)
             self.transforms.tokenizer.save_pretrained(self.args.checkpoint_dir)
 
-        self.model.from_pretrained(self.args.checkpoint_dir)
+        self.model.module.from_pretrained(self.args.checkpoint_dir)
         if data_loader['test']:
             self.__epoch_valid(data_loader['test'], writer=writer, prefix='test')
 

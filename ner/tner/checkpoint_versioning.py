@@ -49,8 +49,9 @@ class Argument:
             checkpoint_dir = self.issue_new_checkpoint(checkpoint_dir, parameter)
             return checkpoint_dir, parameter, is_trained
         except json.JSONDecodeError:
-            if os.path.exists(parameter['transformers_model']):
+            if os.path.exists(os.path.join('logs', parameter['transformers_model'])):
                 # load local checkpoint that trained with TNER
+                # will the test be able to load the local checkpoint?
                 logging.info('load local checkpoint: {}'.format(parameter['transformers_model']))
             else:
                 # new check point for finetuning
