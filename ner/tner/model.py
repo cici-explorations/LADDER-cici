@@ -316,7 +316,7 @@ class TrainTransformersNER:
                         metric = self.__epoch_valid(data_loader['valid'], writer=writer, prefix='valid')
                         if metric['f1'] > best_f1_score:
                             best_f1_score = metric['f1']
-                            self.model.save_pretrained(self.args.checkpoint_dir)
+                            self.model.module.save_pretrained(self.args.checkpoint_dir)
                             self.transforms.tokenizer.save_pretrained(self.args.checkpoint_dir)
                     except RuntimeError:
                         logging.exception('*** RuntimeError: skip validation ***')
