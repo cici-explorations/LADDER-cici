@@ -6,3 +6,5 @@
 
 # Ignore compiled Python files
 *.pyc
+
+/home/yutong/research-projects/LADDER-cici/xlm-roberta-base.zip
