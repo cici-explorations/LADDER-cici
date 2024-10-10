@@ -131,7 +131,7 @@ class TrainTransformersNER:
         """ set up data/language model """
         if self.model is not None:
             return
-        if self.args.is_trained and 0:
+        if self.args.is_trained:
             self.model = transformers.AutoModelForTokenClassification.from_pretrained(self.args.transformers_model)
             self.transforms = Transforms(self.args.transformers_model, cache_dir=self.cache_dir)
             self.label_to_id = self.model.config.label2id
@@ -302,14 +302,10 @@ class TrainTransformersNER:
         #     data_loader['test'] = self.__setup_loader('test', batch_size_validation, max_seq_length_validation)
         # else:
         #     data_loader['test'] = None
-        # Only set up the test data loader
         if 'test' in self.dataset_split.keys():
             data_loader = {'test': self.__setup_loader('test', batch_size_validation, max_seq_length_validation)}
         else:
             raise ValueError("Test data split is not found in the dataset.")
-        
-        # Proceed with testing the model
-        # Example: self.test_model(data_loader['test'])
 
         # start experiment
         # start_time = time()
@@ -326,6 +322,9 @@ class TrainTransformersNER:
         #                     best_f1_score = metric['f1']
         #                     self.model.module.save_pretrained(self.args.checkpoint_dir)
         #                     self.transforms.tokenizer.save_pretrained(self.args.checkpoint_dir)
+        #                     self.model_save_path = os.path.join(self.args.checkpoint_dir, 'pytorch_model.bin')
+        #                     # Save the model's state dictionary to the specified file
+        #                     torch.save(self.model.state_dict(), self.model_save_path)
         #             except RuntimeError:
         #                 logging.exception('*** RuntimeError: skip validation ***')
 
@@ -341,17 +340,22 @@ class TrainTransformersNER:
 
         # logging.info('[training completed, {} sec in total]'.format(time() - start_time))
         # if best_f1_score < 0:
-        #     self.model.save_pretrained(self.args.checkpoint_dir)
+        #     self.model.module.save_pretrained(self.args.checkpoint_dir)
         #     self.transforms.tokenizer.save_pretrained(self.args.checkpoint_dir)
         #     # Save the model's state dictionary
-        #     torch.save(self.model.state_dict(), self.args.checkpoint_dir)
-        #     # torch.save(self.entity_extraction.state_dict(), self.model_save_path)
+        #     # Define the full path for the model file
+        #     self.model_save_path = os.path.join(self.args.checkpoint_dir, 'pytorch_model.bin')
+
+        #     # Save the model's state dictionary to the specified file
+        #     torch.save(self.model.state_dict(), self.model_save_path)
+        # # torch.save(self.entity_extraction.state_dict(), self.model_save_path)
 
         self.model.module.from_pretrained(self.args.checkpoint_dir)
+        self.model.load_state_dict(torch.load(self.model_save_path))
         if data_loader['test']:
             self.__epoch_valid(data_loader['test'], writer=writer, prefix='test')
 
-        # writer.close()
+        writer.close()
         logging.info('ckpt saved at {}'.format(self.args.checkpoint_dir))
         self.args.is_trained = True
         self.__train_called = True

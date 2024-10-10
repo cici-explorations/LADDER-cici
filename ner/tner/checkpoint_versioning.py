@@ -70,12 +70,12 @@ class Argument:
                 json.dump(parameter, f)
             return checkpoint_dir
         else:
-            if len(checkpoints) != 0:
-                for _dir in checkpoints:
-                    with open('{}/parameter.json'.format(_dir), 'r') as f:
-                        if parameter == json.load(f):
-                            # exit('find same configuration at: {}'.format(_dir))
-                            return _dir
+            # if len(checkpoints) != 0:
+            #     for _dir in checkpoints:
+            #         with open('{}/parameter.json'.format(_dir), 'r') as f:
+            #             if parameter == json.load(f):
+            #                 # exit('find same configuration at: {}'.format(_dir))
+            #                 return _dir
             # create a new checkpoint
             with open('{}/tmp.json'.format(checkpoint_dir), 'w') as f:
                 json.dump(parameter, f)
